@@ -2,17 +2,33 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-
-const tabs = [
-  { label: 'All',        href: '/dashboard/all' },
-  { label: 'Pending',    href: '/dashboard/pending' },
-  { label: 'Delivered',  href: '/dashboard/delivered' },
-  { label: 'Returned',   href: '/dashboard/returned' },
-  { label: 'Cancelled',  href: '/dashboard/cancelled' },
-];
+import { useMemo } from 'react';
+import { orders } from '@/app/data/orders';
 
 export default function Sidebar() {
   const path = usePathname();
+
+  const tabs = useMemo(() => {
+    const tabConfig = [
+      { label: 'All', status: 'all' },
+      { label: 'Pending', status: 'pending' },
+      { label: 'Delivered', status: 'delivered' },
+      { label: 'Returned', status: 'returned' },
+      { label: 'Cancelled', status: 'cancelled' },
+    ] as const;
+
+    return tabConfig.map(({ label, status }) => {
+      const count =
+        status === 'all'
+          ? orders.length
+          : orders.filter((o) => o.status === status).length;
+
+      return {
+        label: `${label} (${count})`,
+        href: `/dashboard/${status}`,
+      };
+    });
+  }, []);
 
   return (
     <nav className="w-48 bg-gray-100 h-full p-4">
