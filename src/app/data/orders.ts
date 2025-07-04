@@ -9,6 +9,7 @@ export const orders: Order[] = [
     address: "123 Main St, Karachi",
     productInfo: "Blue Wallet",
     customerName: "Ahmed Khan",
+    courier: "Trax",
   },
   {
     id: 2,
@@ -18,6 +19,7 @@ export const orders: Order[] = [
     address: "45 Garden Ave, Lahore",
     productInfo: "Leather Bag",
     customerName: "Sara Ali",
+    courier: "Postex",
   },
   {
     id: 3,
@@ -27,6 +29,7 @@ export const orders: Order[] = [
     address: "78 Lake Rd, Islamabad",
     productInfo: "Silver Necklace",
     customerName: "Bilal Siddique",
+    courier: "Trax",
   },
   {
     id: 4,
@@ -36,6 +39,7 @@ export const orders: Order[] = [
     address: "22 Hill St, Peshawar",
     productInfo: "Gold Earrings",
     customerName: "Nida Shah",
+    courier: "Postex",
   },
   {
     id: 5,
@@ -45,6 +49,7 @@ export const orders: Order[] = [
     address: "123 Main St, Karachi",
     productInfo: "Blue Wallet",
     customerName: "Ahmed Khan",
+    courier: "Trax",
   },
   {
     id: 6,
@@ -54,6 +59,7 @@ export const orders: Order[] = [
     address: "45 Garden Ave, Lahore",
     productInfo: "Leather Bag",
     customerName: "Sara Ali",
+    courier: "Postex",
   },
   {
     id: 7,
@@ -63,6 +69,7 @@ export const orders: Order[] = [
     address: "78 Lake Rd, Islamabad",
     productInfo: "Silver Necklace",
     customerName: "Bilal Siddique",
+    courier: "Trax",
   },
   {
     id: 8,
@@ -72,6 +79,7 @@ export const orders: Order[] = [
     address: "22 Hill St, Peshawar",
     productInfo: "Gold Earrings",
     customerName: "Nida Shah",
+    courier: "Postex",
   },
   {
     id: 9,
@@ -81,6 +89,7 @@ export const orders: Order[] = [
     address: "123 Main St, Karachi",
     productInfo: "Blue Wallet",
     customerName: "Ahmed Khan",
+    courier: "Trax",
   },
   {
     id: 10,
@@ -90,6 +99,7 @@ export const orders: Order[] = [
     address: "45 Garden Ave, Lahore",
     productInfo: "Leather Bag",
     customerName: "Sara Ali",
+    courier: "Postex",
   },
   {
     id: 11,
@@ -99,6 +109,7 @@ export const orders: Order[] = [
     address: "78 Lake Rd, Islamabad",
     productInfo: "Silver Necklace",
     customerName: "Bilal Siddique",
+    courier: "Trax",
   },
   {
     id: 12,
@@ -108,5 +119,6 @@ export const orders: Order[] = [
     address: "22 Hill St, Peshawar",
     productInfo: "Gold Earrings",
     customerName: "Nida Shah",
+    courier: "Postex",
   },
 ];

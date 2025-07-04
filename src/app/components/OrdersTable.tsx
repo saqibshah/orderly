@@ -1,5 +1,6 @@
 "use client";
 
+import { formatDate } from "@/utils/formatDate"; // adjust path as needed
 import { useState, useMemo, useEffect } from "react";
 
 export type Order = {
@@ -10,6 +11,7 @@ export type Order = {
   address: string;
   productInfo: string;
   customerName: string;
+  courier: string;
 };
 
 interface OrdersTableProps {
@@ -105,6 +107,8 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
                   </td>
                   <td className="px-4 py-2 whitespace-nowrap">
                     {o.trackingNumber}
+                    <br />
+                    Courier: {o.courier}
                   </td>
                   <td
                     className={`px-4 py-2 whitespace-nowrap capitalize ${
@@ -113,7 +117,9 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
                   >
                     {o.status}
                   </td>
-                  <td className="px-4 py-2 whitespace-nowrap">{o.date}</td>
+                  <td className="px-4 py-2 whitespace-nowrap">
+                    {formatDate(o.date)}
+                  </td>
                   <td className="px-4 py-2">{o.address}</td>
                   <td className="px-4 py-2">{o.productInfo}</td>
                   <td className="px-4 py-2 whitespace-nowrap">
