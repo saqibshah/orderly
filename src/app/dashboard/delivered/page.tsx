@@ -1,4 +1,4 @@
-// src/app/dashboard/delivered/page.tsx
+export const dynamic = "force-dynamic";
 
 import OrderStatusPage from "@/app/components/OrderStatusPage";
 
