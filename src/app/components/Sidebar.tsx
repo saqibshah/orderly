@@ -4,10 +4,11 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const tabs = [
-  { label: 'Pending',   href: '/dashboard/pending'   },
-  { label: 'Delivered', href: '/dashboard/delivered' },
-  { label: 'Returned',  href: '/dashboard/returned'  },
-  { label: 'Cancelled', href: '/dashboard/cancelled' },
+  { label: 'All',        href: '/dashboard/all' },
+  { label: 'Pending',    href: '/dashboard/pending' },
+  { label: 'Delivered',  href: '/dashboard/delivered' },
+  { label: 'Returned',   href: '/dashboard/returned' },
+  { label: 'Cancelled',  href: '/dashboard/cancelled' },
 ];
 
 export default function Sidebar() {

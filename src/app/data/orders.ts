@@ -1,0 +1,40 @@
+import type { Order } from '@/app/components/OrdersTable';
+
+export const orders: Order[] = [
+  {
+    id: 1,
+    trackingNumber: '1Z999AA10123456784',
+    status: 'pending',
+    date: '2025-07-01',
+    address: '123 Main St, Karachi',
+    productInfo: 'Blue Wallet',
+    customerName: 'Ahmed Khan',
+  },
+  {
+    id: 2,
+    trackingNumber: '1Z999AA10123456785',
+    status: 'delivered',
+    date: '2025-06-28',
+    address: '45 Garden Ave, Lahore',
+    productInfo: 'Leather Bag',
+    customerName: 'Sara Ali',
+  },
+  {
+    id: 3,
+    trackingNumber: '1Z999AA10123456786',
+    status: 'cancelled',
+    date: '2025-06-30',
+    address: '78 Lake Rd, Islamabad',
+    productInfo: 'Silver Necklace',
+    customerName: 'Bilal Siddique',
+  },
+  {
+    id: 4,
+    trackingNumber: '1Z999AA10123456787',
+    status: 'returned',
+    date: '2025-06-29',
+    address: '22 Hill St, Peshawar',
+    productInfo: 'Gold Earrings',
+    customerName: 'Nida Shah',
+  }
+];
