@@ -1,54 +1,24 @@
-"use client";
+// src/app/components/Sidebar.tsx
+import { prisma } from "@/lib/prisma";
+import SidebarClient from "./SidebarClient"; // new client wrapper
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useMemo } from "react";
-import { orders } from "@/app/data/orders";
+export default async function Sidebar() {
+  const [pending, delivered, returned, cancelled] = await Promise.all([
+    prisma.order.count({ where: { status: "pending" } }),
+    prisma.order.count({ where: { status: "delivered" } }),
+    prisma.order.count({ where: { status: "returned" } }),
+    prisma.order.count({ where: { status: "cancelled" } }),
+  ]);
 
-export default function Sidebar() {
-  const path = usePathname();
+  const all = pending + delivered + returned + cancelled;
 
-  const tabs = useMemo(() => {
-    const tabConfig = [
-      { label: "All", status: "all" },
-      { label: "Pending", status: "pending" },
-      { label: "Delivered", status: "delivered" },
-      { label: "Returned", status: "returned" },
-      { label: "Cancelled", status: "cancelled" },
-    ] as const;
+  const tabs = [
+    { label: "All", count: all, href: "/dashboard/all" },
+    { label: "Pending", count: pending, href: "/dashboard/pending" },
+    { label: "Delivered", count: delivered, href: "/dashboard/delivered" },
+    { label: "Returned", count: returned, href: "/dashboard/returned" },
+    { label: "Cancelled", count: cancelled, href: "/dashboard/cancelled" },
+  ];
 
-    return tabConfig.map(({ label, status }) => {
-      const count =
-        status === "all"
-          ? orders.length
-          : orders.filter((o) => o.status === status).length;
-
-      return {
-        label: `${label} (${count})`,
-        href: `/dashboard/${status}`,
-      };
-    });
-  }, []);
-
-  return (
-    <nav className="w-48 bg-gray-100 h-full p-4">
-      <ul className="space-y-2">
-        {tabs.map((tab) => {
-          const isActive = path === tab.href;
-          return (
-            <li key={tab.href}>
-              <Link
-                href={tab.href}
-                className={`block px-3 py-2 rounded-md hover:bg-gray-200 ${
-                  isActive ? "bg-white shadow font-medium" : ""
-                }`}
-              >
-                {tab.label}
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
-    </nav>
-  );
+  return <SidebarClient tabs={tabs} />;
 }

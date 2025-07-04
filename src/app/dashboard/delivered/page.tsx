@@ -1,4 +1,4 @@
-"use client";
+// src/app/dashboard/delivered/page.tsx
 
 import OrderStatusPage from "@/app/components/OrderStatusPage";
 

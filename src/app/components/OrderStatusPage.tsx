@@ -1,24 +1,36 @@
-"use client";
-
-import OrdersTable, { Order } from "@/app/components/OrdersTable";
-import { orders } from "@/app/data/orders";
+import { prisma } from "@/lib/prisma";
+import OrdersTable, { Order, OrderStatus } from "@/app/components/OrdersTable";
 
 interface OrderStatusPageProps {
-  status: Order["status"];
+  status: OrderStatus;
   title: string;
 }
 
-export default function OrderStatusPage({
+export default async function OrderStatusPage({
   status,
   title,
 }: OrderStatusPageProps) {
-  // Filter the shared orders by the given status
-  const filtered = orders.filter((o) => o.status === status);
+  const rawOrders = await prisma.order.findMany({
+    where: { status },
+    orderBy: { date: "desc" },
+  });
+
+  // Convert DB objects to OrdersTable format
+  const orders: Order[] = rawOrders.map((o) => ({
+    id: o.id,
+    trackingNumber: o.trackingNumber,
+    status: o.status as OrderStatus,
+    date: o.date.toISOString(),
+    address: o.address,
+    productInfo: o.productInfo,
+    customerName: o.customerName,
+    courier: o.courier,
+  }));
 
   return (
     <div>
       <h1 className="text-2xl font-bold mb-4">{title}</h1>
-      <OrdersTable orders={filtered} />
+      <OrdersTable orders={orders} />
     </div>
   );
 }
