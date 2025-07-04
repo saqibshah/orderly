@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { orders } from '@/app/data/orders';
-import OrdersTable from '@/app/components/OrdersTable';
+import { orders } from "@/app/data/orders";
+import OrdersTable from "@/app/components/OrdersTable";
 
 export default function AllOrdersPage() {
   return (

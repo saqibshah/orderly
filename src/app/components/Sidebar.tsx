@@ -1,25 +1,25 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useMemo } from 'react';
-import { orders } from '@/app/data/orders';
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useMemo } from "react";
+import { orders } from "@/app/data/orders";
 
 export default function Sidebar() {
   const path = usePathname();
 
   const tabs = useMemo(() => {
     const tabConfig = [
-      { label: 'All', status: 'all' },
-      { label: 'Pending', status: 'pending' },
-      { label: 'Delivered', status: 'delivered' },
-      { label: 'Returned', status: 'returned' },
-      { label: 'Cancelled', status: 'cancelled' },
+      { label: "All", status: "all" },
+      { label: "Pending", status: "pending" },
+      { label: "Delivered", status: "delivered" },
+      { label: "Returned", status: "returned" },
+      { label: "Cancelled", status: "cancelled" },
     ] as const;
 
     return tabConfig.map(({ label, status }) => {
       const count =
-        status === 'all'
+        status === "all"
           ? orders.length
           : orders.filter((o) => o.status === status).length;
 
@@ -40,7 +40,7 @@ export default function Sidebar() {
               <Link
                 href={tab.href}
                 className={`block px-3 py-2 rounded-md hover:bg-gray-200 ${
-                  isActive ? 'bg-white shadow font-medium' : ''
+                  isActive ? "bg-white shadow font-medium" : ""
                 }`}
               >
                 {tab.label}

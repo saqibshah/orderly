@@ -1,14 +1,17 @@
-'use client';
+"use client";
 
-import OrdersTable, { Order } from '@/app/components/OrdersTable';
-import { orders } from '@/app/data/orders';
+import OrdersTable, { Order } from "@/app/components/OrdersTable";
+import { orders } from "@/app/data/orders";
 
 interface OrderStatusPageProps {
-  status: Order['status'];
+  status: Order["status"];
   title: string;
 }
 
-export default function OrderStatusPage({ status, title }: OrderStatusPageProps) {
+export default function OrderStatusPage({
+  status,
+  title,
+}: OrderStatusPageProps) {
   // Filter the shared orders by the given status
   const filtered = orders.filter((o) => o.status === status);
 

@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import OrderStatusPage from '@/app/components/OrderStatusPage';
+import OrderStatusPage from "@/app/components/OrderStatusPage";
 
 export default function DeliveredPage() {
   return <OrderStatusPage status="delivered" title="Delivered Orders" />;
