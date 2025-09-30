@@ -9,6 +9,30 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Order {
+  id             Int         @id @default(autoincrement())
+  tracking       String      @unique
+  status         OrderStatus @default(PENDING)
+  courierStatus  String
+  customerName   String
+  address        String
+  productOrdered String
+  orderAmount    Float
+  orderDate      DateTime
+  createdAt      DateTime    @default(now())
+  updateAt       DateTime    @updatedAt
+  concludedAt    DateTime?
+  remarks        String[] // Array of strings
+}
+
+enum OrderStatus {
+  PENDING
+  DELIVERED
+  RETURNED
+  CANCELLED
 }
