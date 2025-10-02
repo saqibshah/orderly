@@ -16,18 +16,20 @@ datasource db {
 
 model Order {
   id             Int         @id @default(autoincrement())
+  orderNumber    Int         @unique
   tracking       String      @unique
-  status         OrderStatus @default(PENDING)
-  courierStatus  String
   customerName   String
   address        String
   productOrdered String
   orderAmount    Float
   orderDate      DateTime
+  status         OrderStatus @default(PENDING)
+  courierStatus  String      @default("Booked")
   createdAt      DateTime    @default(now())
-  updateAt       DateTime    @updatedAt
+  updatedAt      DateTime    @updatedAt
   concludedAt    DateTime?
-  remarks        String[] // Array of strings
+  remarks        String[]    @default([]) // Array of strings
+  rawPayload     Json
 }
 
 enum OrderStatus {
