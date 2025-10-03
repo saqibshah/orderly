@@ -51,3 +51,7 @@ export const shopifyOrderSchema = z.object({
     )
     .optional(),
 });
+
+export const verifyReturnSchema = z.object({
+  tracking: z.string(),
+});
