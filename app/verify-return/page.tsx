@@ -49,6 +49,7 @@ const VerifyReturnPage = () => {
         <TextField.Root
           placeholder="Tracking Number"
           {...register("tracking")}
+          autoFocus
         />
         <Button disabled={isSubmitting}>
           Submit {isSubmitting && <Spinner />}
