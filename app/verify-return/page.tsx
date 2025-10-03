@@ -1,6 +1,7 @@
 "use client";
 
 import { Button, Callout, Container, TextField } from "@radix-ui/themes";
+import axios from "axios";
 import { useForm } from "react-hook-form";
 
 interface VerifyReturn {
@@ -14,7 +15,9 @@ const VerifyReturnPage = () => {
     <Container>
       <form
         className="max-w-xl space-y-3 p-5"
-        onSubmit={handleSubmit((data) => console.log(data))}
+        onSubmit={handleSubmit(async (data) => {
+          await axios.post("/api/verify_return", data);
+        })}
       >
         <TextField.Root
           placeholder="Tracking Number"
