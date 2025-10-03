@@ -11,7 +11,7 @@ interface VerifyReturn {
 }
 
 const VerifyReturnPage = () => {
-  const { register, handleSubmit } = useForm<VerifyReturn>();
+  const { register, handleSubmit, setFocus, reset } = useForm<VerifyReturn>();
 
   const [isReturned, setReturned] = useState("");
   const [error, setError] = useState("");
@@ -25,9 +25,13 @@ const VerifyReturnPage = () => {
       await axios.post("/api/verify_return", data);
       setSubmitting(false);
       setReturned(`${data.tracking} marked as returned`);
+      setFocus("tracking");
+      reset();
     } catch (error) {
       setSubmitting(false);
       setError("An unexpected error occured.");
+      setFocus("tracking");
+      reset();
       console.log(error);
     }
   });
