@@ -20,25 +20,6 @@ export async function POST(request: NextRequest) {
     if (order)
       return NextResponse.json({ error: "Already exists" }, { status: 404 });
 
-    // const newOrder = await prisma.order.create({
-    //   data: {
-    //     tracking: body.fulfillments?.[0]?.tracking_number || "N/A",
-    //     orderNumber: body.order_number, // Shopify sends "order_number"
-    //     customerName:
-    //       body.customer?.first_name + " " + body.customer?.last_name,
-    //     address: body.shipping_address
-    //       ? `${body.shipping_address.address1}, ${body.shipping_address.city}, ${body.shipping_address.country}`
-    //       : "N/A",
-    //     productOrdered: body.line_items
-    //       ?.map((item: any) => item.name)
-    //       .join(", "),
-    //     orderAmount: body.total_price ? parseFloat(body.total_price) : 0,
-    //     orderDate: new Date(body.created_at),
-    //     concludedAt: null,
-    //     rawPayload: body,
-    //   },
-    // });
-
     const newOrder = await prisma.order.create({
       data: {
         tracking:

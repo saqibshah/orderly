@@ -1,9 +1,12 @@
 import { prisma } from "@/prisma/client";
 import { Flex, Table, Text } from "@radix-ui/themes";
 import { format } from "date-fns";
+import React from "react";
 
-const OrdersPage = async () => {
-  const orders = await prisma.order.findMany();
+const CancelledOrders = async () => {
+  const orders = await prisma.order.findMany({
+    where: { status: "CANCELLED" },
+  });
 
   return (
     <>
@@ -44,4 +47,4 @@ const OrdersPage = async () => {
   );
 };
 
-export default OrdersPage;
+export default CancelledOrders;
