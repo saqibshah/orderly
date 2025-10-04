@@ -3,6 +3,21 @@ import { OrderStatus } from "@prisma/client";
 import axios from "axios";
 import { NextResponse } from "next/server";
 
+type CourierSuccessResult = {
+  tracking: string;
+  success: true;
+  courierStatus: string;
+};
+
+type CourierErrorResult = {
+  tracking: string;
+  success: false;
+  error: string;
+  details: Record<string, string[]>; // e.g. { tracking_number: ["Invalid ID"] }
+};
+
+type CourierResult = CourierSuccessResult | CourierErrorResult;
+
 export async function GET() {
   try {
     // 1. Get all pending orders from DB
@@ -18,7 +33,7 @@ export async function GET() {
       });
     }
 
-    const results: any[] = [];
+    const results: CourierResult[] = [];
 
     // 2. Loop through each pending order
     for (const order of pendingOrders) {
@@ -66,6 +81,8 @@ export async function GET() {
         results.push({
           tracking: order.tracking,
           success: false,
+          error: "Invalid courier response",
+          details: {}, // must provide something, even empty {}
         });
       }
     }
