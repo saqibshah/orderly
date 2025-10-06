@@ -32,3 +32,5 @@ export default async function Home() {
     </Container>
   );
 }
+
+export const dynamic = "force-dynamic";

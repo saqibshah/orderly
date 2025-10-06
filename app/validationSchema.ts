@@ -47,6 +47,7 @@ export const shopifyOrderSchema = z.object({
     .array(
       z.object({
         tracking_number: z.string().optional(),
+        tracking_company: z.string().optional(),
       })
     )
     .optional(),

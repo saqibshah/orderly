@@ -18,6 +18,7 @@ const OrdersPage = async ({ searchParams }: Props) => {
   const orders = await prisma.order.findMany({
     skip: (page - 1) * pageSize,
     take: pageSize,
+    orderBy: { updatedAt: "desc" },
   });
 
   const ordersCount = await prisma.order.count();
@@ -76,5 +77,7 @@ const OrdersPage = async ({ searchParams }: Props) => {
     </div>
   );
 };
+
+export const dynamic = "force-dynamic";
 
 export default OrdersPage;

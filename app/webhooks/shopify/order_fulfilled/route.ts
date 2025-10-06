@@ -22,10 +22,12 @@ export async function POST(request: NextRequest) {
 
     const newOrder = await prisma.order.create({
       data: {
+        orderNumber: body.order_number,
         tracking:
           body.fulfillments?.[0]?.tracking_number ??
           `NO_TRACK_${body.order_number}`,
-        orderNumber: body.order_number,
+        trackingCompany:
+          body.fulfillments?.[0]?.tracking_company ?? "NO_COMPANY",
         customerName: `${body.customer?.first_name ?? ""} ${
           body.customer?.last_name ?? ""
         }`.trim(),

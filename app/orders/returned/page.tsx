@@ -22,6 +22,7 @@ const ReturnedOrders = async ({ searchParams }: Props) => {
     where,
     skip: (page - 1) * pageSize,
     take: pageSize,
+    orderBy: { updatedAt: "desc" },
   });
 
   const ordersCount = await prisma.order.count({ where });
@@ -80,5 +81,7 @@ const ReturnedOrders = async ({ searchParams }: Props) => {
     </div>
   );
 };
+
+export const dynamic = "force-dynamic";
 
 export default ReturnedOrders;
