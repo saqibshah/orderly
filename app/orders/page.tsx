@@ -1,10 +1,10 @@
 import { prisma } from "@/prisma/client";
-import { Flex, Table, Text } from "@radix-ui/themes";
-import { format } from "date-fns";
-import Sidebar from "./components/Sidebar";
-import TableHeader from "./components/TableHeader";
+import { Table } from "@radix-ui/themes";
 import Pagination from "../components/Pagination";
 import { PAGE_SIZE } from "../components/constants";
+import Sidebar from "./components/Sidebar";
+import TableBody from "./components/TableBody";
+import TableHeader from "./components/TableHeader";
 
 interface Props {
   searchParams: Promise<{ page: string }>;
@@ -29,44 +29,7 @@ const OrdersPage = async ({ searchParams }: Props) => {
       <div className="grow">
         <Table.Root variant="surface">
           <TableHeader />
-          <Table.Body>
-            {orders.map((order) => (
-              <Table.Row key={order.id}>
-                <Table.Cell>
-                  <Flex direction="column" gap="2">
-                    <Text>{order.tracking}</Text>
-                    <Text>{order.orderNumber}</Text>
-                  </Flex>
-                </Table.Cell>
-                <Table.Cell>{order.courierStatus}</Table.Cell>
-                <Table.Cell>{order.status}</Table.Cell>
-                <Table.Cell>
-                  <Flex direction="column" gap="2">
-                    <Text>{order.customerName}</Text>
-                    <Text>{order.address}</Text>
-                  </Flex>
-                </Table.Cell>
-                <Table.Cell>
-                  <Flex direction="column" gap="2">
-                    <Text>{order.productOrdered}</Text>
-                    <Text>{order.orderAmount}</Text>
-                  </Flex>
-                </Table.Cell>
-                <Table.Cell>
-                  {format(new Date(order.orderDate), "do MMM yyyy")}
-                </Table.Cell>
-                <Table.Cell>
-                  {order.concludedAt
-                    ? format(
-                        new Date(order.concludedAt),
-                        "do MMM yyyy, hh:mm a"
-                      )
-                    : ""}
-                </Table.Cell>
-                <Table.Cell>{order.remarks}</Table.Cell>
-              </Table.Row>
-            ))}
-          </Table.Body>
+          <TableBody orders={orders} />
         </Table.Root>
         <Pagination
           pageSize={pageSize}

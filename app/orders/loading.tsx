@@ -27,6 +27,9 @@ const OrdersLoading = () => {
                   <Skeleton />
                 </Table.Cell>
                 <Table.Cell>
+                  <Skeleton />
+                </Table.Cell>
+                <Table.Cell>
                   <Flex direction="column" gap="2">
                     <Skeleton count={2} />
                   </Flex>
