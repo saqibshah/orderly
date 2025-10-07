@@ -2,18 +2,26 @@ import { Card, Flex, Text } from "@radix-ui/themes";
 import Link from "next/link";
 
 interface Props {
+  all: number;
   pending: number;
   delivered: number;
   returned: number;
   cancelled: number;
 }
 
-const IssueSummary = ({ pending, delivered, returned, cancelled }: Props) => {
+const IssueSummary = ({
+  all,
+  pending,
+  delivered,
+  returned,
+  cancelled,
+}: Props) => {
   const containers: {
     label: string;
     value: number;
     link: string;
   }[] = [
+    { label: "All Orders", value: all, link: "" },
     { label: "Pending Orders", value: pending, link: "pending" },
     { label: "Delivered Orders", value: delivered, link: "delivered" },
     { label: "Returned Orders", value: returned, link: "returned" },

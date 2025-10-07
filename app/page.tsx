@@ -4,6 +4,7 @@ import { Container, Flex, Grid } from "@radix-ui/themes";
 import OrderSummary from "./OrderSummary";
 
 export default async function Home() {
+  const all = await prisma.order.count();
   const pending = await prisma.order.count({
     where: { status: "PENDING" },
   });
@@ -22,6 +23,7 @@ export default async function Home() {
       <Grid columns={{ initial: "1", md: "2" }} gap="5">
         <Flex direction="column" gap="5">
           <OrderSummary
+            all={all}
             pending={pending}
             delivered={delivered}
             returned={returned}
