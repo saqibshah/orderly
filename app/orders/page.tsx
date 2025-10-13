@@ -18,7 +18,7 @@ const OrdersPage = async ({ searchParams }: Props) => {
   const orders = await prisma.order.findMany({
     skip: (page - 1) * pageSize,
     take: pageSize,
-    orderBy: { updatedAt: "desc" },
+    orderBy: { orderDate: "desc" },
   });
 
   const ordersCount = await prisma.order.count();
