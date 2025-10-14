@@ -4,19 +4,33 @@ import { Container, Flex, Grid } from "@radix-ui/themes";
 import OrderSummary from "./OrderSummary";
 
 export default async function Home() {
-  const all = await prisma.order.count();
-  const pending = await prisma.order.count({
-    where: { status: "PENDING" },
+  // const all = await prisma.order.count();
+  // const pending = await prisma.order.count({
+  //   where: { status: "PENDING" },
+  // });
+  // const delivered = await prisma.order.count({
+  //   where: { status: "DELIVERED" },
+  // });
+  // const returned = await prisma.order.count({
+  //   where: { status: "RETURNED" },
+  // });
+  // const cancelled = await prisma.order.count({
+  //   where: { status: "CANCELLED" },
+  // });
+
+  const counts = await prisma.order.groupBy({
+    by: ["status"],
+    _count: { _all: true },
   });
-  const delivered = await prisma.order.count({
-    where: { status: "DELIVERED" },
-  });
-  const returned = await prisma.order.count({
-    where: { status: "RETURNED" },
-  });
-  const cancelled = await prisma.order.count({
-    where: { status: "CANCELLED" },
-  });
+
+  const all = counts.reduce((sum, c) => sum + c._count._all, 0);
+  const pending = counts.find((c) => c.status === "PENDING")?._count._all ?? 0;
+  const delivered =
+    counts.find((c) => c.status === "DELIVERED")?._count._all ?? 0;
+  const returned =
+    counts.find((c) => c.status === "RETURNED")?._count._all ?? 0;
+  const cancelled =
+    counts.find((c) => c.status === "CANCELLED")?._count._all ?? 0;
 
   return (
     <Container className="mt-5">

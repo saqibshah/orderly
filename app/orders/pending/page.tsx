@@ -6,6 +6,7 @@ import { Table } from "@radix-ui/themes";
 import Sidebar from "../components/Sidebar";
 import TableBody from "../components/TableBody";
 import TableHeader from "../components/TableHeader";
+import { orderSelect } from "@/app/lib/prismaSelects";
 
 interface Props {
   searchParams: Promise<{ page: string }>;
@@ -19,6 +20,7 @@ const PendingOrders = async ({ searchParams }: Props) => {
   const pageSize = PAGE_SIZE;
 
   const orders = await prisma.order.findMany({
+    select: orderSelect,
     where,
     skip: (page - 1) * pageSize,
     take: pageSize,

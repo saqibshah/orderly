@@ -1,0 +1,15 @@
+export const orderSelect = {
+  id: true,
+  tracking: true,
+  trackingCompany: true,
+  orderNumber: true,
+  courierStatus: true,
+  status: true,
+  customerName: true,
+  address: true,
+  productOrdered: true,
+  orderAmount: true,
+  orderDate: true,
+  concludedAt: true,
+  remarks: true,
+};

@@ -18,7 +18,7 @@ const NavBar = () => {
     <nav className="border-b px-5 py-3">
       <Flex justify="between" align="center">
         <Flex align="center" gap="3">
-          <Link href="/">Logo</Link>
+          <Link href="/">Orderly</Link>
           <ul className="flex space-x-6">
             {links.map((link) => (
               <Link

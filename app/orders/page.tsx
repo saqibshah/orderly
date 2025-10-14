@@ -5,6 +5,7 @@ import { PAGE_SIZE } from "../components/constants";
 import Sidebar from "./components/Sidebar";
 import TableBody from "./components/TableBody";
 import TableHeader from "./components/TableHeader";
+import { orderSelect } from "../lib/prismaSelects";
 
 interface Props {
   searchParams: Promise<{ page: string }>;
@@ -16,6 +17,7 @@ const OrdersPage = async ({ searchParams }: Props) => {
   const pageSize = PAGE_SIZE;
 
   const orders = await prisma.order.findMany({
+    select: orderSelect,
     skip: (page - 1) * pageSize,
     take: pageSize,
     orderBy: { orderDate: "desc" },
