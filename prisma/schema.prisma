@@ -14,28 +14,36 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model Order {
-  id              Int         @id @default(autoincrement())
-  orderNumber     Int         @unique
-  tracking        String      @unique
-  trackingCompany String      @default("NO_COMPANY")
-  customerName    String
-  address         String
-  productOrdered  String
-  orderAmount     Float
-  orderDate       DateTime
-  status          OrderStatus @default(PENDING)
-  courierStatus   String      @default("Booked")
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
-  concludedAt     DateTime?
-  remarks         String[]    @default([]) // Array of strings
-  rawPayload      Json
-}
-
 enum OrderStatus {
   PENDING
   DELIVERED
   RETURNED
   CANCELLED
+}
+
+model Order {
+  id              Int           @id @default(autoincrement())
+  orderNumber     Int           @unique
+  tracking        String        @unique
+  trackingCompany String        @default("NO_COMPANY")
+  customerName    String
+  address         String
+  productOrdered  String
+  orderAmount     Float
+  orderDate       DateTime
+  status          OrderStatus   @default(PENDING)
+  courierStatus   String        @default("Booked")
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  remarks         String[]      @default([]) // Array of strings
+  rawPayload      OrderPayload?
+}
+
+model OrderPayload {
+  id        Int      @id @default(autoincrement())
+  orderId   Int      @unique
+  data      Json // raw payload stored here
+  createdAt DateTime @default(now())
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
 }

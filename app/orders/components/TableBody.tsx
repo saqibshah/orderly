@@ -14,7 +14,7 @@ type Order = {
   productOrdered: string;
   orderAmount: number;
   orderDate: string | Date;
-  concludedAt?: string | Date | null;
+  updatedAt?: string | Date | null;
   remarks: string[];
 };
 
@@ -52,8 +52,8 @@ const TableBody = ({ orders }: Props) => {
             {format(new Date(order.orderDate), "do MMM yyyy")}
           </Table.Cell>
           <Table.Cell>
-            {order.concludedAt
-              ? format(new Date(order.concludedAt), "do MMM yyyy, hh:mm a")
+            {order.updatedAt
+              ? format(new Date(order.updatedAt), "do MMM yyyy, hh:mm a")
               : ""}
           </Table.Cell>
           <Table.Cell>{order.remarks}</Table.Cell>

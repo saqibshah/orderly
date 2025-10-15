@@ -10,6 +10,6 @@ export const orderSelect = {
   productOrdered: true,
   orderAmount: true,
   orderDate: true,
-  concludedAt: true,
+  updatedAt: true,
   remarks: true,
 };

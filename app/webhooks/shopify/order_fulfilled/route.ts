@@ -40,7 +40,14 @@ export async function POST(request: NextRequest) {
           .join(", "),
         orderAmount: parseFloat(body.total_price),
         orderDate: new Date(body.created_at),
-        rawPayload: body,
+        // rawPayload: body,
+
+        // Nested create for related payload
+        rawPayload: {
+          create: {
+            data: body,
+          },
+        },
       },
     });
 
