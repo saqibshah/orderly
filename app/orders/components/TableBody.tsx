@@ -1,6 +1,6 @@
+import { formatLocalDate } from "@/app/utils/formatLocalDate";
 import { OrderStatus } from "@prisma/client";
 import { Flex, Table, Text } from "@radix-ui/themes";
-import { format } from "date-fns";
 
 type Order = {
   id: number;
@@ -49,12 +49,10 @@ const TableBody = ({ orders }: Props) => {
             </Flex>
           </Table.Cell>
           <Table.Cell>
-            {format(new Date(order.orderDate), "do MMM yyyy")}
+            {formatLocalDate(order.orderDate, "do MMM yyyy")}
           </Table.Cell>
           <Table.Cell>
-            {order.updatedAt
-              ? format(new Date(order.updatedAt), "do MMM yyyy, hh:mm a")
-              : ""}
+            {order.updatedAt ? formatLocalDate(order.updatedAt) : ""}
           </Table.Cell>
           <Table.Cell>{order.remarks}</Table.Cell>
         </Table.Row>
