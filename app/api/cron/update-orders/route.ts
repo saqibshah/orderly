@@ -19,24 +19,28 @@ type CourierErrorResult = {
 type CourierResult = CourierSuccessResult | CourierErrorResult;
 
 export async function GET() {
-  try {
-    // 1. Get all pending orders from DB
-    const pendingOrders = await prisma.order.findMany({
-      where: { status: OrderStatus.PENDING },
-      select: { id: true, tracking: true },
-    });
+  const pendingOrders = await prisma.order.findMany({
+    where: { status: OrderStatus.PENDING },
+    select: { id: true, tracking: true, trackingCompany: true },
+  });
 
-    if (pendingOrders.length === 0) {
-      return NextResponse.json({
-        success: true,
-        message: "No pending orders.",
-      });
-    }
+  if (pendingOrders.length === 0) {
+    return NextResponse.json({ success: true, message: "No pending orders." });
+  }
 
-    const results: CourierResult[] = [];
+  // Split by courier
+  const traxOrders = pendingOrders.filter(
+    (o) => o.trackingCompany.toLowerCase() === "trax"
+  );
+  const postexOrders = pendingOrders.filter(
+    (o) => o.trackingCompany.toLowerCase() === "postex"
+  );
 
-    // 2. Loop through each pending order
-    for (const order of pendingOrders) {
+  const results: CourierResult[] = [];
+
+  // ---- TRAX: single requests ----
+  if (traxOrders.length > 0) {
+    for (const order of traxOrders) {
       try {
         const { data } = await axios.get(process.env.TRAX_STATUS!, {
           headers: {
@@ -86,14 +90,74 @@ export async function GET() {
         });
       }
     }
-
-    // 4. Return summary
-    return NextResponse.json({
-      success: true,
-      checked: pendingOrders.length,
-      results,
-    });
-  } catch (error) {
-    console.log(error);
   }
+
+  if (postexOrders.length > 0) {
+    const trackingNumbers = postexOrders.map((o) => o.tracking).join(",");
+    try {
+      const { data } = await axios.get(process.env.POSTEX_BULK_TRACK!, {
+        headers: {
+          token: process.env.POSTEX_API!,
+        },
+        params: {
+          TrackingNumbers: trackingNumbers,
+        },
+      });
+
+      if (
+        data.statusCode === "200" &&
+        Array.isArray(data.dist) &&
+        data.dist.length > 0
+      ) {
+        for (const item of data.dist) {
+          const trackingNum = item.trackingNumber;
+          const trackingData = item.trackingResponse;
+          const courierStatus =
+            trackingData?.transactionStatus || "Unknown Status";
+
+          let newStatus: OrderStatus | undefined = undefined;
+          if (data.current_status === "Delivered") {
+            newStatus = OrderStatus.DELIVERED;
+          }
+
+          await prisma.order.update({
+            where: { tracking: trackingNum },
+            data: {
+              courierStatus,
+              status: newStatus,
+            },
+          });
+
+          results.push({
+            tracking: trackingNum,
+            success: true,
+            courierStatus,
+          });
+        }
+      } else {
+        results.push({
+          tracking: "POSTEX_BULK",
+          success: false,
+          error: "Invalid PostEx response structure",
+          details: data,
+        });
+      }
+    } catch (error) {
+      console.error("PostEx bulk API error:", error);
+      results.push({
+        tracking: "POSTEX_BULK",
+        success: false,
+        error: "PostEx bulk tracking failed",
+        details: {},
+      });
+    }
+  }
+
+  return NextResponse.json({
+    success: true,
+    totalPending: pendingOrders.length,
+    traxPending: traxOrders.length,
+    postExPending: postexOrders.length,
+    results,
+  });
 }
