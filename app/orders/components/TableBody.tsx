@@ -1,3 +1,4 @@
+import Badge from "@/app/components/Badge";
 import { formatLocalDate } from "@/app/utils/formatLocalDate";
 import { OrderStatus } from "@prisma/client";
 import { Flex, Table, Text } from "@radix-ui/themes";
@@ -13,6 +14,7 @@ type Order = {
   address: string;
   productOrdered: string;
   orderAmount: number;
+  createdAt: string | Date;
   orderDate: string | Date;
   updatedAt?: string | Date | null;
   remarks: string[];
@@ -31,11 +33,17 @@ const TableBody = ({ orders }: Props) => {
             <Flex direction="column" gap="2">
               <Text>{order.tracking}</Text>
               <Text>{order.orderNumber}</Text>
+              <Text>{order.trackingCompany}</Text>
             </Flex>
           </Table.Cell>
-          <Table.Cell>{order.trackingCompany}</Table.Cell>
-          <Table.Cell>{order.courierStatus}</Table.Cell>
-          <Table.Cell>{order.status}</Table.Cell>
+          <Table.Cell>
+            <Flex direction="column" gap="2">
+              <Text>{order.courierStatus}</Text>
+              <Text>
+                <Badge status={order.status} />
+              </Text>
+            </Flex>
+          </Table.Cell>
           <Table.Cell>
             <Flex direction="column" gap="2">
               <Text>{order.customerName}</Text>
@@ -48,12 +56,25 @@ const TableBody = ({ orders }: Props) => {
               <Text>{order.orderAmount}</Text>
             </Flex>
           </Table.Cell>
+
           <Table.Cell>
-            {formatLocalDate(order.orderDate, "do MMM yyyy")}
+            <Flex direction="column" gap="2">
+              <Text>
+                Order At: {formatLocalDate(order.orderDate, "do MMM yyyy")}
+              </Text>
+              <Text>
+                Fulfilled At: {formatLocalDate(order.createdAt, "do MMM yyyy")}
+              </Text>
+              <Text>
+                Last Updated At:{" "}
+                {order.updatedAt ? formatLocalDate(order.updatedAt) : ""}
+              </Text>
+            </Flex>
           </Table.Cell>
-          <Table.Cell>
+          {/* <Table.Cell>
             {order.updatedAt ? formatLocalDate(order.updatedAt) : ""}
-          </Table.Cell>
+          </Table.Cell> */}
+
           <Table.Cell>{order.remarks}</Table.Cell>
         </Table.Row>
       ))}

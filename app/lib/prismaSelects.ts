@@ -9,6 +9,7 @@ export const orderSelect = {
   address: true,
   productOrdered: true,
   orderAmount: true,
+  createdAt: true,
   orderDate: true,
   updatedAt: true,
   remarks: true,
