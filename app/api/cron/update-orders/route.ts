@@ -116,7 +116,7 @@ export async function GET() {
             trackingData?.transactionStatus || "Unknown Status";
 
           let newStatus: OrderStatus | undefined = undefined;
-          if (data.current_status === "Delivered") {
+          if (courierStatus === "Delivered") {
             newStatus = OrderStatus.DELIVERED;
           }
 
