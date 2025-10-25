@@ -10,10 +10,12 @@ export async function POST(request: NextRequest) {
     const validation = shopifyOrderSchema.safeParse(body);
 
     if (!validation.success) {
+      console.log(JSON.stringify(validation.error, null, 2));
+
       Sentry.captureException(new Error("Shopify webhook validation failed"), {
         extra: {
-          errors: z.treeifyError(validation.error),
-          bodySnippet: JSON.stringify(body).slice(0, 500), // avoid logging entire payload
+          validationErrors: z.treeifyError(validation.error),
+          requestPreview: JSON.stringify(body).slice(0, 500), // renamed key
         },
       });
 
