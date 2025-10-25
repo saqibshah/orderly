@@ -2,23 +2,39 @@ import { shopifyOrderSchema } from "@/app/validationSchema";
 import { prisma } from "@/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import * as Sentry from "@sentry/nextjs";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const validation = shopifyOrderSchema.safeParse(body);
 
-    if (!validation.success)
+    if (!validation.success) {
+      Sentry.captureException(new Error("Shopify webhook validation failed"), {
+        extra: {
+          errors: z.treeifyError(validation.error),
+          bodySnippet: JSON.stringify(body).slice(0, 500), // avoid logging entire payload
+        },
+      });
+
       return NextResponse.json(z.treeifyError(validation.error), {
         status: 400,
       });
+    }
 
     const order = await prisma.order.findUnique({
       where: { tracking: body.fulfillments?.[0]?.tracking_number },
     });
 
-    if (order)
+    if (order) {
+      Sentry.captureException(new Error("Shopify webhook validation failed"), {
+        extra: {
+          errors: "Already Exists",
+        },
+      });
+
       return NextResponse.json({ error: "Already exists" }, { status: 404 });
+    }
 
     const newOrder = await prisma.order.create({
       data: {
