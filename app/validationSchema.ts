@@ -7,8 +7,8 @@ export const shopifyOrderSchema = z.object({
 
   customer: z
     .object({
-      first_name: z.string().optional(),
-      last_name: z.string().optional(),
+      first_name: z.string().nullable().optional(),
+      last_name: z.string().nullable().optional(),
     })
     .optional(),
 

@@ -46,9 +46,12 @@ export async function POST(request: NextRequest) {
           `NO_TRACK_${body.order_number}`,
         trackingCompany:
           body.fulfillments?.[0]?.tracking_company ?? "NO_COMPANY",
-        customerName: `${body.customer?.first_name ?? "No Name"} ${
-          body.customer?.last_name ?? ""
-        }`.trim(),
+        customerName:
+          body.customer?.first_name || body.customer?.last_name
+            ? `${body.customer?.first_name ?? ""} ${
+                body.customer?.last_name ?? ""
+              }`.trim()
+            : "No Name",
         address: body.shipping_address?.address1 ?? "No address provided",
         productOrdered: body.line_items
           .map(
