@@ -40,7 +40,7 @@ const TodaysOrders = async () => {
   const allCounts = [...createdCounts, ...updatedCounts];
 
   // --- 4️⃣ Totals
-  const all = allCounts.reduce((sum, c) => sum + c._count._all, 0);
+  //   const all = allCounts.reduce((sum, c) => sum + c._count._all, 0);
   const pending =
     allCounts.find((c) => c.status === "PENDING")?._count._all ?? 0;
   const delivered =
