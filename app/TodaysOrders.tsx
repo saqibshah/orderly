@@ -51,7 +51,7 @@ const TodaysOrders = async () => {
     allCounts.find((c) => c.status === "CANCELLED")?._count._all ?? 0;
 
   const containers = [
-    { label: "Today's Orders", value: pending, link: "pending" },
+    { label: "Fulfilled Orders", value: pending, link: "pending" },
     { label: "Delivered Orders", value: delivered, link: "delivered" },
     { label: "Returned Orders", value: returned, link: "returned" },
     { label: "Cancelled Orders", value: cancelled, link: "cancelled" },
@@ -59,7 +59,7 @@ const TodaysOrders = async () => {
 
   return (
     <>
-      <Heading>Today's Orders</Heading>
+      <Heading>Today&apos;s Orders</Heading>
       <Flex gap="4">
         {containers.map((container) => (
           <Card key={container.label}>

@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const LoadingHome = () => {
   const todaysContainers = [
-    { label: "Today's Orders", value: 1, link: "pending" },
+    { label: "Fulfilled Orders", value: 1, link: "pending" },
     { label: "Delivered Orders", value: 1, link: "delivered" },
     { label: "Returned Orders", value: 1, link: "returned" },
     { label: "Cancelled Orders", value: 1, link: "cancelled" },
@@ -23,7 +23,7 @@ const LoadingHome = () => {
     <Container className="mt-5">
       <Grid columns={{ initial: "1", md: "2" }} gap="5">
         <Flex direction="column" gap="5">
-          <Heading>Today's Orders</Heading>
+          <Heading>Today&apos;s Orders</Heading>
           <Flex gap="4">
             {todaysContainers.map((container) => (
               <Card key={container.label}>
