@@ -14,7 +14,7 @@ const TodaysOrders = async () => {
   const createdCounts = await prisma.order.groupBy({
     by: ["status"],
     where: {
-      status: { in: ["PENDING", "CANCELLED"] },
+      status: { in: ["PENDING"] },
       createdAt: {
         gte: startOfDayPK,
         lte: endOfDayPK,
@@ -27,7 +27,7 @@ const TodaysOrders = async () => {
   const updatedCounts = await prisma.order.groupBy({
     by: ["status"],
     where: {
-      status: { in: ["DELIVERED", "RETURNED"] },
+      status: { in: ["DELIVERED", "RETURNED", "CANCELLED"] },
       updatedAt: {
         gte: startOfDayPK,
         lte: endOfDayPK,

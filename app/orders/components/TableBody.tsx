@@ -18,6 +18,7 @@ type Order = {
   orderDate: string | Date;
   updatedAt?: string | Date | null;
   remarks: string[];
+  syncedWithShopify?: boolean;
 };
 
 interface Props {
@@ -42,6 +43,7 @@ const TableBody = ({ orders }: Props) => {
               <Text>
                 <Badge status={order.status} />
               </Text>
+              <Text>{order.syncedWithShopify ? "Shopify - Synced" : ""}</Text>
             </Flex>
           </Table.Cell>
           <Table.Cell>

@@ -13,4 +13,5 @@ export const orderSelect = {
   orderDate: true,
   updatedAt: true,
   remarks: true,
+  syncedWithShopify: true,
 };
