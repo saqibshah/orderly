@@ -17,17 +17,13 @@ const OrdersLoading = () => {
               <Table.Row key={order}>
                 <Table.Cell>
                   <Flex direction="column" gap="2">
-                    <Skeleton count={2} />
+                    <Skeleton count={3} />
                   </Flex>
                 </Table.Cell>
                 <Table.Cell>
-                  <Skeleton />
-                </Table.Cell>
-                <Table.Cell>
-                  <Skeleton />
-                </Table.Cell>
-                <Table.Cell>
-                  <Skeleton />
+                  <Flex direction="column" gap="2">
+                    <Skeleton count={2} />
+                  </Flex>
                 </Table.Cell>
                 <Table.Cell>
                   <Flex direction="column" gap="2">
@@ -39,12 +35,13 @@ const OrdersLoading = () => {
                     <Skeleton count={2} />
                   </Flex>
                 </Table.Cell>
+
                 <Table.Cell>
-                  <Skeleton />
+                  <Flex direction="column" gap="2">
+                    <Skeleton count={3} />
+                  </Flex>
                 </Table.Cell>
-                <Table.Cell>
-                  <Skeleton />
-                </Table.Cell>
+
                 <Table.Cell>
                   <Skeleton />
                 </Table.Cell>
