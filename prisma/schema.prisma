@@ -42,6 +42,7 @@ model Order {
   shopifyLastSyncAt DateTime? // Track last successful sync time
 
   rawPayload OrderPayload?
+  items      OrderItem[]
 }
 
 model OrderPayload {
@@ -49,6 +50,18 @@ model OrderPayload {
   orderId   Int      @unique
   data      Json // raw payload stored here
   createdAt DateTime @default(now())
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+model OrderItem {
+  id          Int      @id @default(autoincrement())
+  orderId     Int
+  productName String
+  quantity    Int      @default(1)
+  price       Float
+  discount    Float    @default(0)
+  createdAt   DateTime @default(now())
 
   order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
 }

@@ -4,6 +4,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import * as Sentry from "@sentry/nextjs";
 
+type DiscountAllocation = {
+  amount: string;
+};
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -55,7 +59,7 @@ export async function POST(request: NextRequest) {
         address: body.shipping_address?.address1 ?? "No address provided",
         productOrdered: body.line_items
           .map(
-            (item: { name: string; quantity: number; price: number }) =>
+            (item: { name: string; quantity: number }) =>
               `${item.name} * ${item.quantity}`
           )
           .join(", "),
@@ -68,6 +72,28 @@ export async function POST(request: NextRequest) {
           create: {
             data: body,
           },
+        },
+
+        // Nested create for order items
+        items: {
+          create: body.line_items.map(
+            (item: {
+              name: string;
+              quantity: number;
+              price: string;
+              discount_allocations?: DiscountAllocation[];
+            }) => ({
+              productName: item.name,
+              quantity: item.quantity,
+              price: parseFloat(item.price),
+              discount: item.discount_allocations
+                ? item.discount_allocations.reduce(
+                    (sum, d) => sum + parseFloat(d.amount),
+                    0
+                  )
+                : 0,
+            })
+          ),
         },
       },
     });
