@@ -112,4 +112,6 @@ const DailyProductAnalytics = async () => {
   );
 };
 
+export const dynamic = "force-dynamic";
+
 export default DailyProductAnalytics;
