@@ -1,12 +1,17 @@
 import React from "react";
-import { Container, Flex, Table } from "@radix-ui/themes";
+import { Container, Flex, Table, Text } from "@radix-ui/themes";
 import Skeleton from "../components/Skeleton";
+import AnalyticsFilter from "./AnalyticsFilter";
 
 const OrdersLoading = () => {
   const sortedStats = [1, 2, 3, 4, 5];
   return (
     <Container mt="8">
-      <Table.Root variant="surface">
+      <AnalyticsFilter />
+      <Text size="6" weight="bold">
+        Analytics
+      </Text>
+      <Table.Root variant="surface" mt="4">
         <Table.Header>
           <Table.Row>
             <Table.ColumnHeaderCell>Product</Table.ColumnHeaderCell>

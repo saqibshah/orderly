@@ -58,8 +58,8 @@ const TodaysOrders = async () => {
   ];
 
   return (
-    <>
-      <Heading>Today&apos;s Orders</Heading>
+    <Flex direction="column" gap="3">
+      <Heading size="5">Today&apos;s Orders</Heading>
       <Flex gap="4">
         {containers.map((container) => (
           <Card key={container.label}>
@@ -77,7 +77,7 @@ const TodaysOrders = async () => {
           </Card>
         ))}
       </Flex>
-    </>
+    </Flex>
   );
 };
 

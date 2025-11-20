@@ -1,5 +1,5 @@
 import { prisma } from "@/prisma/client";
-import { Heading } from "@radix-ui/themes";
+import { Flex, Heading } from "@radix-ui/themes";
 import OrderSummary from "./OrderSummary";
 
 const AllTimeOrders = async () => {
@@ -18,8 +18,8 @@ const AllTimeOrders = async () => {
     counts.find((c) => c.status === "CANCELLED")?._count._all ?? 0;
 
   return (
-    <>
-      <Heading>All Orders</Heading>
+    <Flex direction="column" gap="3">
+      <Heading size="5">All Orders</Heading>
       <OrderSummary
         all={all}
         pending={pending}
@@ -27,7 +27,7 @@ const AllTimeOrders = async () => {
         returned={returned}
         cancelled={cancelled}
       />
-    </>
+    </Flex>
   );
 };
 
