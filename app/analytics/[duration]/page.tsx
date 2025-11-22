@@ -102,7 +102,7 @@ const AnalyticsPage = async ({ params, searchParams }: Props) => {
         formattedRevenue,
       };
     })
-    .sort((a, b) => b.ordered - a.ordered);
+    .sort((a, b) => b.revenue - a.revenue);
 
   return (
     <Container mt="8">

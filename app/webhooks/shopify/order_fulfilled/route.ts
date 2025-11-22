@@ -56,7 +56,10 @@ export async function POST(request: NextRequest) {
                 body.customer?.last_name ?? ""
               }`.trim()
             : "No Name",
-        address: body.shipping_address?.address1 ?? "No address provided",
+        address:
+          [body.shipping_address?.address1, body.shipping_address?.address2]
+            .filter(Boolean)
+            .join(", ") || "No address provided",
         productOrdered: body.line_items
           .map(
             (item: { name: string; quantity: number }) =>
