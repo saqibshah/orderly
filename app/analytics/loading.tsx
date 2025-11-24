@@ -1,16 +1,44 @@
 import React from "react";
-import { Container, Flex, Table, Text } from "@radix-ui/themes";
+import { Card, Container, Flex, Table, Text } from "@radix-ui/themes";
 import Skeleton from "../components/Skeleton";
 import AnalyticsFilter from "./AnalyticsFilter";
 
 const OrdersLoading = () => {
   const sortedStats = [1, 2, 3, 4, 5];
+
+  const containers: {
+    label: string;
+    value: number;
+  }[] = [
+    { label: "Ordered", value: 1 },
+    { label: "Delivered", value: 1 },
+    { label: "Returned", value: 1 },
+    { label: "Pending", value: 1 },
+    { label: "Revenue", value: 1 },
+  ];
+
   return (
     <Container mt="8">
       <AnalyticsFilter />
       <Text size="6" weight="bold">
         Analytics
       </Text>
+
+      <Flex direction="column" gap="3" mt="3" width="70%">
+        <Flex gap="2" justify="between">
+          {containers.map((container) => (
+            <Card key={container.label} style={{ flex: 1 }}>
+              <Flex direction="column" gap="4" justify="between" height="100%">
+                {container.label}
+                <Text size="3" className="font-bold">
+                  <Skeleton width="3rem" />
+                </Text>
+              </Flex>
+            </Card>
+          ))}
+        </Flex>
+      </Flex>
+
       <Table.Root variant="surface" mt="4">
         <Table.Header>
           <Table.Row>

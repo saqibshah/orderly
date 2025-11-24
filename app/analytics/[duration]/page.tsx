@@ -1,7 +1,8 @@
 // app/analytics/[duration]/page.tsx
+import AnalyticsSummary from "@/app/AnalyticsSummary";
+import { getDateRange } from "@/app/lib/getDateRange";
 import { prisma } from "@/prisma/client";
 import { Container, Flex, Table, Text } from "@radix-ui/themes";
-import { getDateRange } from "@/app/lib/getDateRange";
 import AnalyticsFilter from "../AnalyticsFilter";
 
 interface Props {
@@ -104,6 +105,23 @@ const AnalyticsPage = async ({ params, searchParams }: Props) => {
     })
     .sort((a, b) => b.revenue - a.revenue);
 
+  // -------------------------------
+  // TOTALS (All Products Combined)
+  // -------------------------------
+  const totals = sortedStats.reduce(
+    (acc, item) => {
+      acc.ordered += item.ordered;
+      acc.delivered += item.delivered;
+      acc.returned += item.returned;
+      acc.pending += item.pending;
+      acc.revenue += item.revenue;
+      return acc;
+    },
+    { ordered: 0, delivered: 0, returned: 0, pending: 0, revenue: 0 }
+  );
+  // Format revenue
+  const totalFormattedRevenue = totals.revenue.toLocaleString("en-US");
+
   return (
     <Container mt="8">
       <AnalyticsFilter />
@@ -114,6 +132,16 @@ const AnalyticsPage = async ({ params, searchParams }: Props) => {
         Analytics — {duration.replace("-", " ").toUpperCase()} ({monthName}{" "}
         {year})
       </Text>
+
+      <Flex direction="column" gap="3" mt="3" width="70%">
+        <AnalyticsSummary
+          all={totals.ordered}
+          pending={totals.pending}
+          delivered={totals.delivered}
+          returned={totals.returned}
+          revenue={totalFormattedRevenue}
+        />
+      </Flex>
 
       <Table.Root variant="surface" mt="4">
         <Table.Header>
