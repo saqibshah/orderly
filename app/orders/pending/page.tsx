@@ -24,7 +24,7 @@ const PendingOrders = async ({ searchParams }: Props) => {
     where,
     skip: (page - 1) * pageSize,
     take: pageSize,
-    orderBy: { updatedAt: "desc" },
+    orderBy: { orderDate: "desc" },
   });
 
   const ordersCount = await prisma.order.count({ where });

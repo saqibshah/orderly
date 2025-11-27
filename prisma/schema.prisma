@@ -41,7 +41,10 @@ model Order {
   shopifySyncStatus OrderStatus @default(PENDING)
   shopifyLastSyncAt DateTime? // Track last successful sync time
 
-  courierDeliveryCharge Float @default(200) // <-- Add
+  courierDeliveryCharge Float    @default(0) // <-- Add
+  courierPaymentStatus  String   @default("Pending")
+  courierPaid           Float    @default(0)
+  statusesApplied       String[] @default([])
 
   rawPayload OrderPayload?
   items      OrderItem[]
