@@ -15,6 +15,7 @@ const OrdersLoading = () => {
     { label: "Returned", value: 1 },
     { label: "Pending", value: 1 },
     { label: "Revenue", value: 1 },
+    { label: "Courier Charges", value: 1 },
   ];
 
   return (
@@ -24,7 +25,7 @@ const OrdersLoading = () => {
         Analytics
       </Text>
 
-      <Flex direction="column" gap="3" mt="3" width="70%">
+      <Flex direction="column" gap="3" mt="3" width="80%">
         <Flex gap="2" justify="between">
           {containers.map((container) => (
             <Card key={container.label} style={{ flex: 1 }}>

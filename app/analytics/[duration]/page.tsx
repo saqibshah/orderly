@@ -15,7 +15,7 @@ const AnalyticsPage = async ({ params, searchParams }: Props) => {
   // ----------------------------
   // Duration (default = this-month)
   // ----------------------------
-  const duration = params.duration ?? "this-month";
+  const duration = (await params).duration ?? "this-month";
 
   // Date range helper
   const { start, end } = getDateRange(duration, searchParams);
