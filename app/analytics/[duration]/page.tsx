@@ -4,6 +4,7 @@ import { getDateRange } from "@/app/lib/getDateRange";
 import { prisma } from "@/prisma/client";
 import { Container, Flex, Table, Text } from "@radix-ui/themes";
 import AnalyticsFilter from "../AnalyticsFilter";
+import { OrderStatus } from "@prisma/client";
 
 interface Props {
   params: { duration: string };
@@ -11,26 +12,24 @@ interface Props {
 }
 
 const AnalyticsPage = async ({ params, searchParams }: Props) => {
-  // -------------------------
-  // DEFAULT = this-month
-  // -------------------------
-  const duration = (await params).duration ?? "this-month";
+  // ----------------------------
+  // Duration (default = this-month)
+  // ----------------------------
+  const duration = params.duration ?? "this-month";
 
-  // Get date range
+  // Date range helper
   const { start, end } = getDateRange(duration, searchParams);
 
-  // Format heading date
   const monthName = start.toLocaleString("en-US", { month: "long" });
   const year = start.getFullYear();
 
-  // Fetch all items within date range
+  // -----------------------------------------------------
+  // Get all items inside date-range (single DB call)
+  // -----------------------------------------------------
   const items = await prisma.orderItem.findMany({
     where: {
       order: {
-        orderDate: {
-          gte: start,
-          lte: end,
-        },
+        orderDate: { gte: start, lte: end },
       },
     },
     select: {
@@ -38,108 +37,135 @@ const AnalyticsPage = async ({ params, searchParams }: Props) => {
       quantity: true,
       price: true,
       discount: true,
-      order: { select: { status: true } },
+      order: {
+        select: {
+          status: true,
+          courierDeliveryCharge: true,
+        },
+      },
     },
   });
 
-  // Aggregate per product
-  const productStats: Record<
-    string,
-    {
-      ordered: number;
-      delivered: number;
-      returned: number;
-      pending: number;
-      revenue: number;
-    }
-  > = {};
+  // -----------------------------------------------------
+  // Aggregate Stats Per Product
+  // -----------------------------------------------------
+  type ProductStats = {
+    ordered: number;
+    delivered: number;
+    returned: number;
+    pending: number;
+    revenue: number;
+    deliveryCharges: number;
+  };
 
-  items.forEach((item) => {
-    const stats = productStats[item.productName] || {
-      ordered: 0,
-      delivered: 0,
-      returned: 0,
-      pending: 0,
-      revenue: 0,
-    };
+  const productStats: Record<string, ProductStats> = {};
+
+  for (const item of items) {
+    if (!productStats[item.productName]) {
+      productStats[item.productName] = {
+        ordered: 0,
+        delivered: 0,
+        returned: 0,
+        pending: 0,
+        revenue: 0,
+        deliveryCharges: 0,
+      };
+    }
+
+    const stats = productStats[item.productName];
 
     stats.ordered += item.quantity;
 
+    const charge = item.order.courierDeliveryCharge ?? 0;
+
     switch (item.order.status) {
-      case "DELIVERED":
+      case OrderStatus.DELIVERED:
         stats.delivered += item.quantity;
         stats.revenue += item.price * item.quantity - item.discount;
+        stats.deliveryCharges += charge;
         break;
 
-      case "CANCELLED":
-      case "RETURNED":
+      case OrderStatus.RETURNED:
+      case OrderStatus.CANCELLED:
         stats.returned += item.quantity;
+        stats.deliveryCharges += charge;
         break;
 
-      case "PENDING":
+      case OrderStatus.PENDING:
         stats.pending += item.quantity;
+        stats.deliveryCharges += charge;
         break;
     }
+  }
 
-    productStats[item.productName] = stats;
-  });
-
+  // -----------------------------------------------------
+  // Convert -> Array + computed fields + sort by revenue
+  // -----------------------------------------------------
   const sortedStats = Object.entries(productStats)
     .map(([productName, stats]) => {
       const deliveryPercentage = stats.ordered
         ? ((stats.delivered / stats.ordered) * 100).toFixed(2)
         : "0.00";
 
-      const formattedRevenue = stats.revenue.toLocaleString("en-US", {
-        style: "currency",
-        currency: "PKR",
-        minimumFractionDigits: 2,
-      });
-
       return {
         productName,
         ...stats,
         deliveryPercentage: `${deliveryPercentage}%`,
-        formattedRevenue,
+        formattedRevenue: stats.revenue.toLocaleString("en-US", {
+          style: "currency",
+          currency: "PKR",
+        }),
+        formattedDeliveryCharges: stats.deliveryCharges.toLocaleString("en-US"),
       };
     })
     .sort((a, b) => b.revenue - a.revenue);
 
-  // -------------------------------
-  // TOTALS (All Products Combined)
-  // -------------------------------
+  // -----------------------------------------------------
+  // TOTALS (across all products)
+  // -----------------------------------------------------
   const totals = sortedStats.reduce(
-    (acc, item) => {
-      acc.ordered += item.ordered;
-      acc.delivered += item.delivered;
-      acc.returned += item.returned;
-      acc.pending += item.pending;
-      acc.revenue += item.revenue;
-      return acc;
-    },
-    { ordered: 0, delivered: 0, returned: 0, pending: 0, revenue: 0 }
+    (acc, item) => ({
+      ordered: acc.ordered + item.ordered,
+      delivered: acc.delivered + item.delivered,
+      returned: acc.returned + item.returned,
+      pending: acc.pending + item.pending,
+      revenue: acc.revenue + item.revenue,
+      deliveryCharges: acc.deliveryCharges + item.deliveryCharges,
+    }),
+    {
+      ordered: 0,
+      delivered: 0,
+      returned: 0,
+      pending: 0,
+      revenue: 0,
+      deliveryCharges: 0,
+    }
   );
-  // Format revenue
-  const totalFormattedRevenue = totals.revenue.toLocaleString("en-US");
 
+  const totalFormattedRevenue = totals.revenue.toLocaleString("en-US");
+  const totalFormattedDeliveryCharges =
+    totals.deliveryCharges.toLocaleString("en-US");
+
+  // -----------------------------------------------------
+  // RENDER
+  // -----------------------------------------------------
   return (
     <Container mt="8">
       <AnalyticsFilter />
-      {/* ------------------------------ */}
-      {/* Dynamic Heading w/ Month + Year */}
-      {/* ------------------------------ */}
+
       <Text size="6" weight="bold">
         Analytics — {duration.replace("-", " ").toUpperCase()} ({monthName}{" "}
         {year})
       </Text>
 
-      <Flex direction="column" gap="3" mt="3" width="70%">
+      <Flex direction="column" gap="3" mt="3" width="80%">
         <AnalyticsSummary
           all={totals.ordered}
           pending={totals.pending}
           delivered={totals.delivered}
           returned={totals.returned}
           revenue={totalFormattedRevenue}
+          deliveryCharges={totalFormattedDeliveryCharges}
         />
       </Flex>
 

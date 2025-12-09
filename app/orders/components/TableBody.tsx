@@ -19,6 +19,7 @@ type Order = {
   updatedAt?: string | Date | null;
   remarks: string[];
   syncedWithShopify?: boolean;
+  courierDeliveryCharge: number;
 };
 
 interface Props {
@@ -56,6 +57,7 @@ const TableBody = ({ orders }: Props) => {
             <Flex direction="column" gap="2">
               <Text>{order.productOrdered}</Text>
               <Text>{order.orderAmount}</Text>
+              <Text>Courier Charges: {order.courierDeliveryCharge}</Text>
             </Flex>
           </Table.Cell>
 

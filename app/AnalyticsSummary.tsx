@@ -6,6 +6,7 @@ interface Props {
   delivered: number;
   returned: number;
   revenue: string;
+  deliveryCharges: string;
 }
 
 const AnalyticsSummary = ({
@@ -14,6 +15,7 @@ const AnalyticsSummary = ({
   delivered,
   returned,
   revenue,
+  deliveryCharges,
 }: Props) => {
   const containers: {
     label: string;
@@ -24,6 +26,7 @@ const AnalyticsSummary = ({
     { label: "Returned", value: returned },
     { label: "Pending", value: pending },
     { label: "Revenue", value: revenue },
+    { label: "Courier Charges", value: deliveryCharges },
   ];
 
   return (

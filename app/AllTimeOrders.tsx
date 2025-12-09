@@ -5,6 +5,11 @@ import OrderSummary from "./OrderSummary";
 const AllTimeOrders = async () => {
   const counts = await prisma.order.groupBy({
     by: ["status"],
+    where: {
+      orderDate: {
+        gte: new Date(new Date().setFullYear(new Date().getFullYear() - 1)), // last 1 year
+      },
+    },
     _count: { _all: true },
   });
 
@@ -19,7 +24,7 @@ const AllTimeOrders = async () => {
 
   return (
     <Flex direction="column" gap="3">
-      <Heading size="5">All Orders</Heading>
+      <Heading size="5">12 Months Orders</Heading>
       <OrderSummary
         all={all}
         pending={pending}

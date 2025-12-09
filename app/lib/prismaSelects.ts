@@ -14,4 +14,5 @@ export const orderSelect = {
   updatedAt: true,
   remarks: true,
   syncedWithShopify: true,
+  courierDeliveryCharge: true,
 };

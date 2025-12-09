@@ -15,6 +15,11 @@ type CourierMap = Record<string, CourierStats>;
 const CourierOrders = async () => {
   const counts = await prisma.order.groupBy({
     by: ["trackingCompany", "status"],
+    where: {
+      orderDate: {
+        gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // last 30 days including today
+      },
+    },
     _count: { _all: true },
   });
 
@@ -45,7 +50,7 @@ const CourierOrders = async () => {
     <>
       {Object.entries(couriers).map(([courier, summary]) => (
         <Flex direction="column" gap="3" key={courier}>
-          <Heading size="5">{courier} Orders</Heading>
+          <Heading size="5">{courier} - 30 Days</Heading>
           <OrderSummary
             all={summary.all}
             pending={summary.pending}

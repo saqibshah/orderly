@@ -8,10 +8,10 @@ const Sidebar = () => {
   const pathname = usePathname();
 
   const menu = [
-    { name: "Pending", href: "/orders/pending" },
-    { name: "Delivered", href: "/orders/delivered" },
-    { name: "Returned", href: "/orders/returned" },
-    { name: "Cancelled", href: "/orders/cancelled" },
+    { name: "Pending", href: "/orders?status=pending" },
+    { name: "Delivered", href: "/orders?status=delivered" },
+    { name: "Returned", href: "/orders?status=returned" },
+    { name: "Cancelled", href: "/orders?status=cancelled" },
   ];
 
   return (

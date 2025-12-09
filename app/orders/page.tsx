@@ -6,9 +6,21 @@ import Sidebar from "./components/Sidebar";
 import TableBody from "./components/TableBody";
 import TableHeader from "./components/TableHeader";
 import { orderSelect } from "../lib/prismaSelects";
+import { OrderStatus } from "@prisma/client";
+
+const VALID_STATUSES = Object.values(OrderStatus);
+
+type WhereClause = {
+  status?: OrderStatus;
+  trackingCompany?: string;
+};
 
 interface Props {
-  searchParams: Promise<{ page: string }>;
+  searchParams: Promise<{
+    page: string;
+    courier?: string;
+    status?: OrderStatus;
+  }>;
 }
 
 const OrdersPage = async ({ searchParams }: Props) => {
@@ -16,14 +28,34 @@ const OrdersPage = async ({ searchParams }: Props) => {
   const page = parseInt(params.page) || 1;
   const pageSize = PAGE_SIZE;
 
+  const where: WhereClause = {};
+
+  // -------------------------------
+  // VALIDATE STATUS
+  // -------------------------------
+  if (
+    params.status &&
+    VALID_STATUSES.includes(params.status.toUpperCase() as OrderStatus)
+  ) {
+    where.status = params.status.toUpperCase() as OrderStatus;
+  }
+
+  const courier = params.courier?.toLowerCase();
+  if (courier === "trax") {
+    where.trackingCompany = "Trax"; // <-- apply filter
+  } else if (courier === "postex") {
+    where.trackingCompany = "PostEx"; // <-- apply filter
+  }
+
   const orders = await prisma.order.findMany({
     select: orderSelect,
+    where,
     skip: (page - 1) * pageSize,
     take: pageSize,
     orderBy: { orderDate: "desc" },
   });
 
-  const ordersCount = await prisma.order.count();
+  const ordersCount = await prisma.order.count({ where });
 
   return (
     <div className="flex">
