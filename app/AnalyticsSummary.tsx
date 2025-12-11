@@ -17,27 +17,42 @@ const AnalyticsSummary = ({
   revenue,
   deliveryCharges,
 }: Props) => {
+  // Helper to calculate percentages safely
+  const percent = (value: number) => {
+    if (!all || all === 0) return "0%";
+    return ((value / all) * 100).toFixed(1) + "%";
+  };
+
   const containers: {
     label: string;
     value: string | number;
+    percentage?: string;
   }[] = [
-    { label: "Ordered", value: all },
-    { label: "Delivered", value: delivered },
-    { label: "Returned", value: returned },
-    { label: "Pending", value: pending },
+    { label: "Ordered", value: all, percentage: "100%" },
+    { label: "Delivered", value: delivered, percentage: percent(delivered) },
+    { label: "Returned", value: returned, percentage: percent(returned) },
+    { label: "Pending", value: pending, percentage: percent(pending) },
     { label: "Revenue", value: revenue },
     { label: "Courier Charges", value: deliveryCharges },
   ];
 
   return (
     <Flex gap="2" justify="between">
-      {containers.map((container) => (
-        <Card key={container.label} style={{ flex: 1 }}>
-          <Flex direction="column" gap="4" justify="between" height="100%">
-            {container.label}
-            <Text size="3" className="font-bold">
-              {container.value}
+      {containers.map((c) => (
+        <Card key={c.label} style={{ flex: 1 }}>
+          <Flex direction="column" gap="2" justify="between" height="100%">
+            <Text size="2" className="text-gray-600">
+              {c.label}
             </Text>
+            <Text size="3" className="font-bold">
+              {c.value}
+            </Text>
+
+            {c.percentage && (
+              <Text size="1" className="text-gray-500">
+                {c.percentage}
+              </Text>
+            )}
           </Flex>
         </Card>
       ))}
