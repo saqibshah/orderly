@@ -7,18 +7,14 @@ import AnalyticsFilter from "../AnalyticsFilter";
 import { OrderStatus } from "@prisma/client";
 
 interface Props {
-  params: { duration: string };
-  searchParams: Record<string, string>;
+  params: Promise<{ duration: string }>;
+  searchParams: Promise<Record<string, string>>;
 }
 
 const AnalyticsPage = async ({ params, searchParams }: Props) => {
-  // ----------------------------
-  // Duration (default = this-month)
-  // ----------------------------
   const duration = (await params).duration ?? "this-month";
 
-  // Date range helper
-  const { start, end } = getDateRange(duration, searchParams);
+  const { start, end } = getDateRange(duration, await searchParams);
 
   const monthName = start.toLocaleString("en-US", { month: "long" });
   const year = start.getFullYear();
